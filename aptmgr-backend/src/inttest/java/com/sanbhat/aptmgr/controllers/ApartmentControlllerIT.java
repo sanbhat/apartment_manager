@@ -1,4 +1,4 @@
-package com.sanbhat.apartment.mgr.controllers;
+package com.sanbhat.aptmgr.controllers;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -22,11 +22,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.sanbhat.aptmgr.Constants;
 import com.sanbhat.aptmgr.entities.ApartmentsEntity;
-import com.sanbhat.aptmgr.entities.UserEntity;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControlllerIT {
+public class ApartmentControlllerIT {
 
 	@LocalServerPort
     private int port;
@@ -44,16 +43,18 @@ public class UserControlllerIT {
     }
 
     @Test
-    public void testSignUp() throws Exception {
-    	UserEntity user = new UserEntity();
-    	user.setEmail("bhat.86@gmail.com");
-    	user.setName("Santhosh Bhat");
-    	user.setPassword("password");
+    public void testSave() throws Exception {
+    	ApartmentsEntity apt = new ApartmentsEntity();
+    	apt.setAptName("Shilpitha Splendour Annex");
+    	apt.setAddress("Chinnappa Layout, Mahadevapura");
+    	apt.setCity("Bengaluru");
+    	apt.setPinCode("560048");
+    	apt.setPrimaryEmail("surendra@gmail.com");
     	
-    	HttpEntity<UserEntity> httpEntity = new HttpEntity<>(user, httpHeaders);
-        ResponseEntity<String> response = template.exchange(base.toString() + "users/signup/", HttpMethod.POST, httpEntity, String.class);
+    	HttpEntity<ApartmentsEntity> httpEntity = new HttpEntity<>(apt, httpHeaders);
+        ResponseEntity<String> response = template.exchange(base.toString() + "apartment/save/", HttpMethod.POST, httpEntity, String.class);
         System.out.println(response.getBody());
-        assertThat(response.getBody(), equalTo("SIGNUP_SUCCESSFUL"));
+        assertThat(response.getBody(), equalTo(Constants.SUCCESS));
     }
     
     @Test

@@ -1,9 +1,9 @@
-package com.sanbhat.apartment.mgr.controllers;
+package com.sanbhat.aptmgr.controllers;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.net.URL;
 
@@ -20,12 +20,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.sanbhat.aptmgr.Constants;
-import com.sanbhat.aptmgr.entities.ApartmentsEntity;
+import com.sanbhat.aptmgr.entities.UserEntity;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ApartmentControlllerIT {
+public class UserControlllerIT {
 
 	@LocalServerPort
     private int port;
@@ -43,26 +42,25 @@ public class ApartmentControlllerIT {
     }
 
     @Test
-    public void testSave() throws Exception {
-    	ApartmentsEntity apt = new ApartmentsEntity();
-    	apt.setAptName("Shilpitha Splendour Annex");
-    	apt.setAddress("Chinnappa Layout, Mahadevapura");
-    	apt.setCity("Bengaluru");
-    	apt.setPinCode("560048");
-    	apt.setPrimaryEmail("surendra@gmail.com");
+    public void testSignUp() throws Exception {
+    	UserEntity user = new UserEntity();
+    	user.setEmail("bhat.86@gmail.com");
+    	user.setName("Santhosh Bhat");
+    	user.setPassword("password");
     	
-    	HttpEntity<ApartmentsEntity> httpEntity = new HttpEntity<>(apt, httpHeaders);
-        ResponseEntity<String> response = template.exchange(base.toString() + "apartment/save/", HttpMethod.POST, httpEntity, String.class);
+    	HttpEntity<UserEntity> httpEntity = new HttpEntity<>(user, httpHeaders);
+        ResponseEntity<String> response = template.exchange(base.toString() + "users/signup/", HttpMethod.POST, httpEntity, String.class);
         System.out.println(response.getBody());
-        assertThat(response.getBody(), equalTo(Constants.SUCCESS));
+        assertThat(response.getBody(), equalTo("SIGNUP_SUCCESSFUL"));
     }
     
     @Test
-    public void testGet() throws Exception {
+    public void testGetByEmail() throws Exception {
     	HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-    	ResponseEntity<ApartmentsEntity> response = template.exchange(base.toString() + "apartment/get/2", HttpMethod.GET, httpEntity, ApartmentsEntity.class);
-    	ApartmentsEntity apt = response.getBody();
-    	assertNotNull(apt);
-    	assertEquals(apt.getAptName(), "Shilpitha Splendour Annex");
+    	ResponseEntity<UserEntity> response = template.exchange(base.toString() + "users/email?email=bhat.86@gmail.com", 
+    			HttpMethod.GET, httpEntity, UserEntity.class);
+    	UserEntity user = response.getBody();
+    	assertNotNull(user);
+    	assertEquals(user.getName(), "Santhosh Bhat");
     }
 }

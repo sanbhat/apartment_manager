@@ -36,7 +36,7 @@ public class UserController {
 		return ReturnCode.SUCCESS.toString(); 
 	}
 	
-	@RequestMapping(value="/email")
+	@RequestMapping(value="/email", method = RequestMethod.GET)
 	public UserEntity getUserByEmail(@RequestParam(name="email") String email) {
 		return userService.getUserByEmail(email);
 	}
