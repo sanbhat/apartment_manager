@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Route} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import Header from './components/headerComponent/header';
 import AptMgrRoutes from './components/routes/routes';
@@ -8,12 +8,13 @@ import AptMgrRoutes from './components/routes/routes';
 class App extends Component {
   render() {
     return (
+      <BrowserRouter>
+        <div className="App">
 
-      <div className="App">
-
-        <Header />
-        <AptMgrRoutes />
-      </div>
+          <Header />
+          <AptMgrRoutes />
+        </div>
+      </BrowserRouter>
     );
   }
 }
