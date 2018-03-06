@@ -1,55 +1,80 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import { connect } from 'react-redux';
 
 class Header extends Component {
-  render() {
-    return (
-      <header>
 
-      <nav class="navbar navbar-inverse navbar-fixed-top">
-	      <div class="container-fluid">
-	        <div class="navbar-header">
-	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-	            <span class="sr-only">Toggle navigation</span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	            <span class="icon-bar"></span>
-	          </button>
-	          <a class="navbar-brand" href="#">Apartment Manager</a>
-	        </div>
-	        <div id="navbar" class="navbar-collapse collapse">
-	          <ul class="nav navbar-nav navbar-right">
-	            <li><a href="#">Notifications</a></li>
-	            <li><a href="#">Settings</a></li>
-	            <li><a href="#">Profile</a></li>
-	            <li><a href="#">Help</a></li>
-	          </ul>
-	          <form class="navbar-form navbar-right">
-	            <input type="text" class="form-control" placeholder="Search..."/>
-	          </form>
-	        </div>
-	      </div>
-    	</nav>
+	constructor(props) {
+		super(props);
+	}
+	
+	render() {
 
-			<div class="container-fluid">
-				<div class="row">
-					<div class="col-sm-3 col-md-2 sidebar">
-						<ul class="nav nav-sidebar">
+			const {isAuthenticated, user} = this.props;
+
+			const userLinks = (
+				<ul className="nav navbar-nav navbar-right">
+					<li><a href="#">Notifications</a></li>
+					<li><a href="#">Profile - {user.login_name}</a></li>
+					<li><a href="#">Logout</a></li>
+				</ul>
+			);
+
+			const guestLinks = (
+				<ul className="nav navbar-nav navbar-right">
+					<li><Link to="/login">Login</Link></li>	
+				</ul>
+			);
+
+			return (
+					<header>
+
+						<nav className="navbar navbar-inverse navbar-fixed-top">
+							<div className="container-fluid">
+								<div className="navbar-header">
+									<button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+										<span className="sr-only">Toggle navigation</span>
+										<span className="icon-bar"></span>
+										<span className="icon-bar"></span>
+										<span className="icon-bar"></span>
+									</button>
+									<a className="navbar-brand" href="#">Apartment Manager</a>
+								</div>
+								<div id="navbar" className="navbar-collapse collapse">
+									{isAuthenticated ? userLinks : guestLinks}
+									<form className="navbar-form navbar-right">
+										<input type="text" className="form-control" placeholder="Search..."/>
+									</form>
+								</div>
+							</div>
+						</nav>
+
+						<div className="container-fluid">
+							<div className="row">
+								<div className="col-sm-3 col-md-2 sidebar">
+									<ul className="nav nav-sidebar">
+									
+										<li><Link to="/home" activeclassname={"active"}>Home<span className="sr-only">(current)</span></Link></li>
+										<li><Link to="/residents" activeclassname={"active"}>Residents Management</Link></li>
+										<li><Link to="/incidents" activeclassname={"active"}>Incident Management</Link></li>
+									
+									</ul>
+								</div>
+							</div>
+						</div>
 						
-							<li><Link to="/home" activeClass={"active"}>Home<span class="sr-only">(current)</span></Link></li>
-							<li><Link to="/residents" activeClass={"active"}>Residents Management</Link></li>
-							<li><Link to="/incidents" activeClass={"active"}>Incident Management</Link></li>
-						
-						</ul>
-					</div>
-				</div>
-			</div>
-				
 
-      </header>
-    );
-  }
+			</header>
+			);
+	}
 }
 
+const mapStateToProps = (state) => {
+	return {
+		isAuthenticated : state.auth.isAuthenticated,
+		user : state.auth.user
+	}
+};
+
+Header = connect(mapStateToProps, null)(Header);
 export default Header;
