@@ -18,7 +18,7 @@ public class UserController {
 	
 	@Autowired
 	private UserService userService;
-
+	
 	@RequestMapping(value="/signup", method=RequestMethod.POST)
 	public String signUpUser(@RequestBody UserEntity user) {
 		ReturnCode ret =  userService.signUpUser(user.getEmail(), user.getName(), user.getPassword());
