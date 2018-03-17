@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+import { setCurrentUser } from '../../actions/authActions';
+import { APP_TOKEN_KEY } from '../../config/config';
 
 class Header extends Component {
 
@@ -16,7 +20,7 @@ class Header extends Component {
 				<ul className="nav navbar-nav navbar-right">
 					<li><a href="#">Notifications</a></li>
 					<li><a href="#">Profile - {user.login_name}</a></li>
-					<li><a href="#">Logout</a></li>
+					<li><a onClick={ (event) =>  this.logout(event)}>Logout</a></li>
 				</ul>
 			);
 
@@ -63,10 +67,25 @@ class Header extends Component {
 							</div>
 						</div>
 						
+						<Redirect to='/login' />
 
 			</header>
 			);
 	}
+
+	logout(event) {
+		localStorage.removeItem(APP_TOKEN_KEY);
+		this.props.setCurrentUser({});
+	}
+}
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      setCurrentUser: (user) => dispatch(setCurrentUser(user))
+    };
 }
 
 const mapStateToProps = (state) => {
@@ -76,5 +95,5 @@ const mapStateToProps = (state) => {
 	}
 };
 
-Header = connect(mapStateToProps, null)(Header);
+Header = connect(mapStateToProps, mapDispatchToProps)(Header);
 export default Header;

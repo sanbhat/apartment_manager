@@ -17,7 +17,7 @@ create table users (
 	name varchar(250),
 	password varchar(100),
 	country_code smallint,
-	phone smallint,
+	phone varchar(10),
 	picture_url varchar(300),
 	unique(email)
 );

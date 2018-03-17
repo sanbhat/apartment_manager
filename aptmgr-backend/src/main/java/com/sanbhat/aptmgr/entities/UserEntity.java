@@ -32,7 +32,7 @@ public class UserEntity implements Serializable {
 	private int countryCode;
 	
 	@Column
-	private int phone;
+	private String phone;
 	
 	@Column(name="picture_url")
 	private String pictureUrl;
@@ -77,11 +77,11 @@ public class UserEntity implements Serializable {
 		this.countryCode = countryCode;
 	}
 
-	public int getPhone() {
+	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(int phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 

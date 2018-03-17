@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 
-import {APP_TOKEN_KEY} from '../../config/config';
-import {LoginStyles as styles} from '../../styles/loginStyles';
-import ApiService from  '../../services/apiService';
-import setCurrentUser from '../../actions/authActions';
+import {APP_TOKEN_KEY, APP_BASE_URL} from '../../config/config';
+import {setCurrentUser} from '../../actions/authActions';
+import {setAuthenticationToken} from '../../utils/utils';
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import TextField from 'material-ui/TextField'
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import Checkbox from 'material-ui/Checkbox';
 
 
 class Login extends Component {
@@ -21,54 +18,87 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            rememberMe: false
+            rememberMe: false,
+            errorMessage: ''
         }
         this.login = this.login.bind(this);
-        this.reset = this.reset.bind(this);
     }
 
     render() {
+
+        const isAuthenticated = this.props.isAuthenticated;
+        console.log('login - isAuth', isAuthenticated);
+
+        if(isAuthenticated) {
+            return <Redirect to='/home' />
+        }
+
         return (
-            <MuiThemeProvider>
-                <div>
-                    <h3>Apartment Manager - Login</h3>
-                    <TextField
-                        id="email"
-                        hintText="enter email"
-                        floatingLabelText="Login Id"
-                        value={this.state.email}
-                        onChange={event => {this.setState({ email : event.target.value})}}
-                    />
-                    <br></br>
-                    <TextField
-                        id="password"
-                        hintText="Password"
-                        floatingLabelText="Password"
-                        type="password"
-                        value={this.state.password}
-                        onChange={event => {this.setState({ password : event.target.value})}}
-                    />
-                    <br></br>
-                    <Checkbox
-                        id="rememberMe"
-                        label="Remember me"
-                        checked={this.state.rememberMe}
-                        onCheck={event => {this.setState({ rememberMe : event.target.value})}}
-                        style={styles.checkbox}
-                    />
-                    
-                    <RaisedButton label="Login" primary={true} style={styles.raisedButton} onClick={this.login} />
-                    <RaisedButton label="Reset" secondary={true} style={styles.raisedButton} onClick={this.reset} />
-                    <br />
-                    <FlatButton label="Forgot Password" primary={true}  style={styles.flatButton}/>
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-4">
+                        <div className="panel panel-default">
+                            <div className="panel-heading">
+                                <strong>Login</strong>
+                            </div>
+                            <div className="panel-body">
+                                <form className="form-horizontal" role="form">
+                                    <div className="form-group">
+                                        <label htmlFor="emailLabel" className="col-sm-3 control-label">
+                                            Email</label>
+                                        <div className="col-sm-9">
+                                            <input type="email" className="form-control" id="emailLabel" 
+                                            placeholder="Email" required="required" onChange= { (event) => this.setState({ email : event.target.value})}/>
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="passwordLabel" className="col-sm-3 control-label">
+                                            Password</label>
+                                        <div className="col-sm-9">
+                                            <input type="password" className="form-control" id="passwordLabel" 
+                                            placeholder="Password" required="true" onChange = { (event) => this.setState({ password: event.target.value})}/>
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <div className="col-sm-offset-3 col-sm-9">
+                                            <div className="checkbox">
+                                                <label>
+                                                    <input type="checkbox" onChange={ (event) => this.setState({ rememberMe : event.target.value === "on" ? true : false})}/>
+                                                    Remember me
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="form-group last">
+                                        <div className="col-sm-offset-3 col-sm-9">
+                                            <button type="submit" className="btn btn-success btn-sm" onClick={ (event) => this.login(event)}>
+                                                Sign in</button>
+                                                <button type="reset" className="btn btn-default btn-sm">
+                                                Reset</button>
+                                        </div>
+                                    </div>
+                                    { this.state.errorMessage !== '' && 
+                                         <div class="alert alert-danger" role="alert">{this.state.errorMessage}</div>
+                                    }
+                                   
+                                </form>
+                            </div>
+                            <div className="panel-footer">
+                                Not Registered? <Link to="/signup">Register here</Link>
+                            </div>
+                            
+                        </div>
+                    </div>
                 </div>
-            </MuiThemeProvider>
+            </div>
+
         );
     }
 
     login = (event) => {
-        event.preventDefault();
-        ApiService.login(this.state)
+        this.state.errorMessage = '';
+        let data = this.state;
+        axios.post(APP_BASE_URL + 'api/auth/login', data)
         .then(res => {
             const token = res.data.token;
             localStorage.setItem(APP_TOKEN_KEY, token);
@@ -77,25 +107,30 @@ class Login extends Component {
             } else {
                 this.props.setCurrentUser({});
             }
-            ApiService.setAuthenticationToken(token);
+            setAuthenticationToken(token);
+        })
+        .catch(err => {
+            if(err.response.data.message) {
+                this.setState({errorMessage : err.response.data.message});
+            } else {
+                this.setState({errorMessage : err.message});
+            }
         })
     }
-
-    reset = (event) => {
-       this.setState({
-            email : '',
-            password: '',
-            rememberMe: false
-        });
-    }
 }
+
+const mapStateToProps = (state) => {
+	return {
+		isAuthenticated : state.auth.isAuthenticated
+	}
+};
 
     
 const mapDispatchToProps = (dispatch) => {
     return {
       setCurrentUser: (user) => dispatch(setCurrentUser(user))
     };
-  }
+}
   
 
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

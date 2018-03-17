@@ -19,12 +19,6 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
-	@RequestMapping(value="/signup", method=RequestMethod.POST)
-	public String signUpUser(@RequestBody UserEntity user) {
-		ReturnCode ret =  userService.signUpUser(user.getEmail(), user.getName(), user.getPassword());
-		return ret.toString();
-	}
-	
 	@RequestMapping(value="/{id}", method = RequestMethod.PUT)
 	public String updateUser(@RequestBody UserEntity user, @PathVariable(name="id") int id) {
 		try {

@@ -18,13 +18,15 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public ReturnCode signUpUser(String email, String name, String password) {
-		UserEntity existing  = getUserByEmail(email);
+	public ReturnCode signUpUser(UserEntity user) {
+		UserEntity existing  = getUserByEmail(user.getEmail());
 		if(existing == null) {
 			UserEntity userEntity = new UserEntity();
-			userEntity.setEmail(email);
-			userEntity.setName(name);
-			userEntity.setPassword(password);
+			userEntity.setEmail(user.getEmail());
+			userEntity.setName(user.getName());
+			userEntity.setPassword(user.getPassword());
+			userEntity.setCountryCode(user.getCountryCode());
+			userEntity.setPhone(user.getPhone());
 			UserEntity saved = userRepository.save(userEntity);
 			return saved.getId() > 0 ? ReturnCode.SIGNUP_SUCCESSFUL : ReturnCode.SIGNUP_FAILED;
 		} else {

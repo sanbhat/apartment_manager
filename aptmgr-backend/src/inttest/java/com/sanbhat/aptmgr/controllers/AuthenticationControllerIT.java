@@ -1,7 +1,7 @@
 package com.sanbhat.aptmgr.controllers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 import java.net.URL;
 
@@ -19,10 +19,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.sanbhat.aptmgr.entities.UserEntity;
+import com.sanbhat.aptmgr.models.Response;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class UserControlllerIT {
+public class AuthenticationControllerIT {
 
 	@LocalServerPort
     private int port;
@@ -38,14 +39,18 @@ public class UserControlllerIT {
     public void setUp() throws Exception {
         this.base = new URL("http://localhost:" + port + "/");
     }
-
+	
     @Test
-    public void testGetByEmail() throws Exception {
-    	HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-    	ResponseEntity<UserEntity> response = template.exchange(base.toString() + "users/email?email=bhat.86@gmail.com", 
-    			HttpMethod.GET, httpEntity, UserEntity.class);
-    	UserEntity user = response.getBody();
-    	assertNotNull(user);
-    	assertEquals(user.getName(), "Santhosh Bhat");
+    public void testSignUp() throws Exception {
+    	UserEntity user = new UserEntity();
+    	user.setEmail("bhat.86@gmail.com");
+    	user.setName("Santhosh Bhat");
+    	user.setPassword("password");
+    	
+    	HttpEntity<UserEntity> httpEntity = new HttpEntity<>(user, httpHeaders);
+        ResponseEntity<Response> response = template.exchange(base.toString() + "auth/signup/", HttpMethod.POST, httpEntity, Response.class);
+        System.out.println(response.getBody());
+        assertThat(response.getBody(), equalTo("SIGNUP_SUCCESSFUL"));
     }
+
 }
