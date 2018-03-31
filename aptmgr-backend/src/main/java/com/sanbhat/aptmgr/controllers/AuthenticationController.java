@@ -1,8 +1,10 @@
 package com.sanbhat.aptmgr.controllers;
 
 import java.util.Date;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,11 +23,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @RestController
-@RequestMapping(value="/auth")
+@RequestMapping(value="/api/auth")
 public class AuthenticationController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
     public LoginResponse login(@RequestBody LoginRequest loginRequest) throws UserException {
@@ -53,14 +58,14 @@ public class AuthenticationController {
 		switch(ret) {
 			case USER_EXISTS:
 				response.setErrorCode(ret.toString());
-				response.setErrorMessage("User with email - " + user.getEmail() + " - is already registered");
+				response.setErrorMessage(messageSource.getMessage(ret.toString(), new Object[]{user.getEmail()}, Locale.getDefault()));
 				break;
 			case SIGNUP_FAILED:
 				response.setErrorCode(ret.toString());
-				response.setErrorMessage("Sign up failed due to unknown reason");
+				response.setErrorMessage(messageSource.getMessage(ret.toString(), null, Locale.getDefault()));
 				break;
 			default:
-				response.setMessage(ret.toString());
+				response.setMessage(messageSource.getMessage(ret.toString(), null, Locale.getDefault()));
 				break;
 		}
 		return response;

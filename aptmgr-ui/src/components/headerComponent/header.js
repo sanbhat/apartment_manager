@@ -2,15 +2,26 @@ import React, { Component } from 'react';
 import {Redirect} from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import { setCurrentUser } from '../../actions/authActions';
-import { APP_TOKEN_KEY } from '../../config/config';
+import { APP_TOKEN_KEY, APP_BASE_URL } from '../../config/config';
 
 class Header extends Component {
 
 	constructor(props) {
 		super(props);
+		this.state = {
+			email : '',
+			name : '',
+			pictureUrl : ''
+		};
 	}
+
+	componentDidMount() {
+		this.fetchUserData();
+	}
+
 	
 	render() {
 
@@ -26,7 +37,7 @@ class Header extends Component {
 
 			const guestLinks = (
 				<ul className="nav navbar-nav navbar-right">
-					<li><Link to="/login">Login</Link></li>	
+					<li><Link to={"/login"}>Login</Link></li>	
 				</ul>
 			);
 
@@ -76,6 +87,16 @@ class Header extends Component {
 	logout(event) {
 		localStorage.removeItem(APP_TOKEN_KEY);
 		this.props.setCurrentUser({});
+	}
+
+	fetchUserData() {
+		axios.get(APP_BASE_URL + 'users/email?email='+this.props.user.login_name)
+		.then(res => {
+			console.log(res);
+		})
+		.catch(err => {
+			console.log(err);
+		})
 	}
 }
 

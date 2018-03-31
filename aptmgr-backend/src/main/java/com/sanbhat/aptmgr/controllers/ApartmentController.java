@@ -12,7 +12,7 @@ import com.sanbhat.aptmgr.entities.ApartmentsEntity;
 import com.sanbhat.aptmgr.services.ApartmentsService;
 
 @RestController
-@RequestMapping(value="/apartment")
+@RequestMapping(value="/api/apartment")
 public class ApartmentController {
 	
 	@Autowired

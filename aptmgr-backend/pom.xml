@@ -10,6 +10,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.5.9.RELEASE</version>
+        <relativePath/>
     </parent>
 
     <dependencies>
@@ -22,6 +23,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
         
         <dependency>
@@ -76,7 +83,21 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            
+	        <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-war-plugin</artifactId>
+		        <configuration>
+		          <webResources>
+		            <resource>
+		              <!-- this is relative to the pom.xml directory -->
+		              <directory>../aptmgr-ui/build</directory>
+		            </resource>
+		          </webResources>
+		        </configuration>
+	        </plugin>
         </plugins>
+        
     </build>
     
     <repositories>
@@ -101,4 +122,5 @@
     </pluginRepositories>
     
     
+    <packaging>war</packaging>
 </project>

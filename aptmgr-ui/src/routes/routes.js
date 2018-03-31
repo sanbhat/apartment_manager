@@ -36,11 +36,11 @@ class AptMgrRoutes extends Component {
     render() {
         return (
             <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                <Route path="/login" component={Login} />
-                <Route path="/signup" component={Signup} />
-                <PrivateRoute path="/home" component={Home} />
-                <PrivateRoute path="/incidents" component={Incidents} />
-                <PrivateRoute path="/residents" component={Residents} />
+                <Route path={"/login"} component={Login} />
+                <Route path={"/signup"} component={Signup} />
+                <PrivateRoute path={"/home"} component={Home} />
+                <PrivateRoute path={"/incidents"} component={Incidents} />
+                <PrivateRoute path={"/residents"} component={Residents} />
             </div>
         );
     }

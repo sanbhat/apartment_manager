@@ -36,6 +36,9 @@ public class UserEntity implements Serializable {
 	
 	@Column(name="picture_url")
 	private String pictureUrl;
+	
+	@Column
+	private String role;
 
 	public int getId() {
 		return id;
@@ -92,6 +95,14 @@ public class UserEntity implements Serializable {
 	public void setPictureUrl(String pictureUrl) {
 		this.pictureUrl = pictureUrl;
 	}
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	@Override
 	public int hashCode() {
@@ -117,7 +128,7 @@ public class UserEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", email=" + email + ", name=" +name+ ", password=" + password + ", countryCode=" + countryCode
+		return "UserEntity [id=" + id + ", email=" + email + ", role= "+ role +", name=" +name+ ", password=" + password + ", countryCode=" + countryCode
 				+ ", phone=" + phone + ", pictureUrl=" + pictureUrl + "]";
 	}
 	

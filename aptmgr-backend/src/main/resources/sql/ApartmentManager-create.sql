@@ -19,6 +19,9 @@ create table users (
 	country_code smallint,
 	phone varchar(10),
 	picture_url varchar(300),
+	role varchar(30), 
+	-- SUPER_ADMIN (SaaS admin), APT_ADMIN (Admin of a particular Apt), MC (Memember of Mangement committe of an Apt), 
+	-- MEMBER ( Member of an Apt), USER (A simply regiested user, not part of any apt)
 	unique(email)
 );
 

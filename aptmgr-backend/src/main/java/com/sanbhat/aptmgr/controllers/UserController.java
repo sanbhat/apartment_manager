@@ -13,7 +13,7 @@ import com.sanbhat.aptmgr.services.UserService;
 import com.sanbhat.aptmgr.services.UserService.ReturnCode;
 
 @RestController
-@RequestMapping(value="/users")
+@RequestMapping(value="/api/users")
 public class UserController {
 	
 	@Autowired
