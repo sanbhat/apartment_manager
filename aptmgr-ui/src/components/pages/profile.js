@@ -1,19 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+
+import { signUpStyle } from './signup';
+import { APP_BASE_URL } from '../../config/config';
 import { clone, isEmpty } from 'lodash';
 
-import axios from 'axios';
-import {APP_BASE_URL} from '../../config/config';
 
 
-export const signUpStyle = {
-    height: "180px", 
-    width: "100%", 
-    display: "block"
-}
-
-class Signup extends Component {
-
+class Profile extends Component {
 
     constructor(props) {
         super(props);
@@ -23,46 +19,45 @@ class Signup extends Component {
             name : '',
             countryCode : 0,
             phone: 0,
+            pictureUrl: '',
             errorMessage : '',
             message : ''
         };
-        this.signup = this.signup.bind(this);
         this.preview = this.preview.bind(this);
+        this.updateUserData = this.updateUserData.bind(this);
+    }
+
+    componentWillMount() {
+        console.log(this.props.match.params.user);
+        this.fetchUserData(this.props.match.params.user);
     }
 
     render() {
+        console.log('render - edit profile');
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-md-6">
                         <div className="panel panel-default">
                             <div className="panel-heading">
-                                <strong>Sign up ( Its free! )</strong>
+                                <strong>Edit Profile</strong>
                             </div>
                             <div className="panel-body">
-                                <form className="form-horizontal" onSubmit={this.signup}>
+                                <form className="form-horizontal" onSubmit={this.updateUserData}>
                                     <div className="form-group">
                                         <label htmlFor="emailLabel" className="col-sm-3 control-label">
                                             Email</label>
                                         <div className="col-sm-9">
-                                            <input type="email" className="form-control" id="emailLabel" 
-                                            placeholder="Email" required="true" onChange= { (event) => this.setState({ email : event.target.value})}/>
+                                            <input type="email" className="form-control" id="emailLabel" readOnly
+                                                placeholder="Email" required="true" value={this.state.email} onChange={(event) => this.setState({ email: event.target.value })} />
                                         </div>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="fullNameLabel" className="col-sm-3 control-label">
                                             Full Name</label>
                                         <div className="col-sm-9">
-                                            <input type="text" className="form-control" id="fullNameLabel" 
-                                            placeholder="Full Name" required="true" onChange= { (event) => this.setState({ name : event.target.value})}/>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <label htmlFor="passwordLabel" className="col-sm-3 control-label">
-                                            Password</label>
-                                        <div className="col-sm-9">
-                                            <input type="password" className="form-control" id="passwordLabel" 
-                                            placeholder="Password" required="true" onChange = { (event) => this.setState({ password: event.target.value})}/>
+                                            <input type="text" className="form-control" id="fullNameLabel"
+                                                placeholder="Full Name" required="true" value={this.state.name} onChange={(event) => this.setState({ name: event.target.value })} />
                                         </div>
                                     </div>
                                     <div className="form-group">
@@ -70,13 +65,13 @@ class Signup extends Component {
                                             Country Code</label>
                                         <div className="col-sm-9">
                                             <input type="number" className="form-control" id="codeLabel" size="3" min="1" max="999"
-                                            placeholder="For example - +91" required="true" onChange = { (event) => this.setState({ countryCode: event.target.value})}/>
+                                                placeholder="For example - +91" required="true" value={this.state.countryCode} onChange={(event) => this.setState({ countryCode: event.target.value })} />
                                         </div>
                                         <label htmlFor="phoneLabel" className="col-sm-3 control-label">
                                             Phone</label>
                                         <div className="col-sm-9">
                                             <input type="text" pattern="\d*" className="form-control" id="phoneLabel" size="10" minLength="10" maxLength="10"
-                                                placeholder="Phone" required="true" onChange = { (event) => this.setState({ phone: event.target.value})}/>
+                                                placeholder="Phone" required="true" value={this.state.phone} onChange={(event) => this.setState({ phone: event.target.value })} />
                                         </div>
                                     </div>
 
@@ -84,10 +79,11 @@ class Signup extends Component {
                                         <label htmlFor="profilePicLabel" className="col-sm-3 control-label">
                                             Profile picture</label>
                                         <div className="col-sm-7">
-                                            <input type="text" className="form-control" placeholder="Picture URL" id="profilePicLabel" onChange= { (event) => this.setState({ pictureUrl : event.target.value})}/>
+                                            <input type="text" className="form-control" placeholder="Picture URL" id="profilePicLabel" 
+                                                value={this.state.pictureUrl ? this.state.pictureUrl : '' } onChange={(event) => this.setState({ pictureUrl: event.target.value })} />
                                         </div>
                                         <div className="col-sm-2">
-                                        <button type="button" className="btn btn-success btn-sm" onClick={this.preview}>
+                                            <button type="button" className="btn btn-success btn-sm" onClick={(event) => this.preview(event.target.value)}>
                                                 Preview</button>
                                         </div>
                                     </div>
@@ -95,12 +91,10 @@ class Signup extends Component {
                                     <div className="form-group last">
                                         <div className="col-sm-offset-3 col-sm-9">
                                             <button type="submit" className="btn btn-success btn-sm">
-                                                Sign Up</button>
-                                                <button type="reset" className="btn btn-default btn-sm">
-                                                Reset</button>
+                                                Update Profile</button>
                                         </div>
                                     </div>
-                                   
+
                                 </form>
 
                                 {this.state.errorMessage !== '' &&
@@ -110,10 +104,6 @@ class Signup extends Component {
                                     <div className="alert alert-success" role="alert">{this.state.message}</div>
                                 }
                             </div>
-                            <div className="panel-footer">
-                                Already registered? <Link to={"/login"}>Sign in</Link>
-                            </div>
-                            
                         </div>
                     </div>
                     <div className="col-xs-6 col-md-3">
@@ -123,21 +113,44 @@ class Signup extends Component {
                             </div>
                             <div className="panel-body">
                                 <a href="#" className="thumbnail">
-                                    <img id="profilePicPreview" src="//:0"  style={signUpStyle} alt="..." />
+                                    <img id="profilePicPreview" src="//:0" style={signUpStyle} alt="..." />
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>            
-
+            </div>
         )
     }
 
-    signup(event) {
-        let data = clone(this.state);
+    preview(url) {
+        document.getElementById('profilePicPreview').src = this.state.pictureUrl;
+    }
+
+    fetchUserData(userEmailId) {
+        axios.get(APP_BASE_URL + 'users/email?email=' + userEmailId)
+        .then(res => {
+            let data = res.data;
+            this.setState({
+                name : data.name,
+                email : data.email,
+                phone: data.phone,
+                countryCode: data.countryCode,
+                pictureUrl: data.pictureUrl
+            })
+            if(!isEmpty(this.state.pictureUrl)) {
+                this.preview(this.state.pictureUrl)
+            }
+        })
+        .catch(err => {
+            console.error(err);
+        })
+    }
+
+    updateUserData(event) {
         event.preventDefault();
-        axios.post(APP_BASE_URL + 'auth/signup', data)
+        let data = clone(this.state);
+        axios.put(APP_BASE_URL + 'users/email', data)
         .then(res => {
             if(!isEmpty(res.data.errorMessage)) {
                 this.setState({ 
@@ -159,10 +172,6 @@ class Signup extends Component {
         })
     }
 
-    preview(event) {
-        document.getElementById('profilePicPreview').src = this.state.pictureUrl;
-    }
-
 }
 
-export default Signup;
+export default Profile;

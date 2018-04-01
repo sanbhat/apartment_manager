@@ -28,7 +28,6 @@ class Login extends Component {
     render() {
 
         const isAuthenticated = this.props.isAuthenticated;
-        console.log('login - isAuth', isAuthenticated);
 
         if(isAuthenticated) {
             return <Redirect to='/home' />
@@ -43,7 +42,7 @@ class Login extends Component {
                                 <strong>Login</strong>
                             </div>
                             <div className="panel-body">
-                                <form onSubmit={this.login} className="form-horizontal" role="form">
+                                <form onSubmit={this.login} className="form-horizontal">
                                     <div className="form-group">
                                         <label htmlFor="emailLabel" className="col-sm-3 control-label">
                                             Email</label>
@@ -79,7 +78,7 @@ class Login extends Component {
                                         </div>
                                     </div>
                                     { this.state.errorMessage !== '' && 
-                                         <div class="alert alert-danger" role="alert">{this.state.errorMessage}</div>
+                                         <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>
                                     }
                                    
                                 </form>
@@ -99,7 +98,7 @@ class Login extends Component {
     login = (event) => {
         event.preventDefault();
         let data = clone(this.state);
-        this.state.errorMessage = '';
+        this.setState( { errorMessage : '' } );
         axios.post(APP_BASE_URL + 'auth/login', data)
             .then(res => {
                 const token = res.data.token;

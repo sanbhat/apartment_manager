@@ -78,12 +78,39 @@
 
 
     <build>
+    	<!-- Name of the war file -->
+    	<finalName>aptmgr</finalName>
         <plugins>
+        	<!-- Spring boot maven build plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             
+            <!-- Execution of UI build -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>ui-module-build</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>npm</executable>
+                    <arguments>
+                        <argument>run</argument>
+                        <argument>build-dev</argument>
+                    </arguments>
+                    <workingDirectory>../aptmgr-ui</workingDirectory>
+                </configuration>
+            </plugin>
+            
+            <!-- Maven war plugin to copy the resources from the UI build folder -->
 	        <plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-war-plugin</artifactId>
@@ -94,6 +121,7 @@
 		              <directory>../aptmgr-ui/build</directory>
 		            </resource>
 		          </webResources>
+                  <outputDirectory>/MyDev/tomcat/webapps</outputDirectory>
 		        </configuration>
 	        </plugin>
         </plugins>

@@ -14,32 +14,68 @@ class Header extends Component {
 		this.state = {
 			email : '',
 			name : '',
-			pictureUrl : ''
+			pictureUrl : '',
+			defaultPictureUrl : 'http://placehold.it/30x30'
 		};
 	}
 
+	/**
+	 * Called when the component is mounted for the first time
+	 */
 	componentDidMount() {
-		this.fetchUserData();
+		this.fetchUserData(this.props.user.login_name);
+	}
+
+	/**
+	 * Called when, redux state change triggers props update
+	 */
+	componentWillReceiveProps(nextProps) {
+		this.fetchUserData(nextProps.user.login_name);
 	}
 
 	
 	render() {
-
 			const {isAuthenticated, user} = this.props;
 
-			const userLinks = (
+			const isSuperAdmin = user.user_role === "SUPER_ADMIN";
+
+			const userNavBarLinks = (
 				<ul className="nav navbar-nav navbar-right">
-					<li><a href="#">Notifications</a></li>
-					<li><a href="#">Profile - {user.login_name}</a></li>
-					<li><a onClick={ (event) =>  this.logout(event)}>Logout</a></li>
+					<li><img src={this.state.pictureUrl ? this.state.pictureUrl : this.state.defaultPictureUrl} height="45" width="45" className="profile-image img-circle" /> </li>
+					<li className="dropdown">
+						<a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{this.state.name ? this.state.name : user.login_name}<span className="caret"></span></a>
+						<ul className="dropdown-menu">
+							<li><a href="#">Notifications</a></li>
+							<li><Link to={"/profile/"+ user.login_name}>Edit Profile</Link></li>
+							<li role="separator" className="divider"></li>
+							<li><a onClick={ (event) =>  this.logout(event)}>Logout</a></li>
+						</ul>
+					</li>
 				</ul>
 			);
 
-			const guestLinks = (
+			const guestNavBarLinks = (
 				<ul className="nav navbar-nav navbar-right">
 					<li><Link to={"/login"}>Login</Link></li>	
 				</ul>
 			);
+
+			const userLeftMenu = (
+				<React.Fragment>
+					<li><Link to="/home" activeclassname={"active"}>Home<span className="sr-only">(current)</span></Link></li>
+					<li><Link to="/residents" activeclassname={"active"}>Residents Management</Link></li>
+					<li><Link to="/incidents" activeclassname={"active"}>Incident Management</Link></li>
+				</React.Fragment>
+			)
+
+			const superAdminLeftMenu = (
+				<React.Fragment>
+					{userLeftMenu}
+					<li><Link to="/register-apt" activeclassname={"active"}>Register Apartments</Link></li>
+					<li><Link to="/apt-management" activeclassname={"active"}>Apartment Management</Link></li>
+					<li><Link to="/saas-admin" activeclassname={"active"}>Admin</Link></li>
+				</React.Fragment>
+			)
 
 			return (
 					<header>
@@ -56,7 +92,7 @@ class Header extends Component {
 									<a className="navbar-brand" href="#">Apartment Manager</a>
 								</div>
 								<div id="navbar" className="navbar-collapse collapse">
-									{isAuthenticated ? userLinks : guestLinks}
+									{isAuthenticated ? userNavBarLinks : guestNavBarLinks}
 									<form className="navbar-form navbar-right">
 										<input type="text" className="form-control" placeholder="Search..."/>
 									</form>
@@ -68,17 +104,11 @@ class Header extends Component {
 							<div className="row">
 								<div className="col-sm-3 col-md-2 sidebar">
 									<ul className="nav nav-sidebar">
-									
-										<li><Link to="/home" activeclassname={"active"}>Home<span className="sr-only">(current)</span></Link></li>
-										<li><Link to="/residents" activeclassname={"active"}>Residents Management</Link></li>
-										<li><Link to="/incidents" activeclassname={"active"}>Incident Management</Link></li>
-									
+										{ isSuperAdmin ? superAdminLeftMenu : userLeftMenu }
 									</ul>
 								</div>
 							</div>
 						</div>
-						
-						<Redirect to='/login' />
 
 			</header>
 			);
@@ -89,10 +119,13 @@ class Header extends Component {
 		this.props.setCurrentUser({});
 	}
 
-	fetchUserData() {
-		axios.get(APP_BASE_URL + 'users/email?email='+this.props.user.login_name)
+	fetchUserData(userEmailId) {
+		axios.get(APP_BASE_URL + 'users/email?email='+userEmailId)
 		.then(res => {
-			console.log(res);
+			this.setState({
+				name : res.data.name,
+				pictureUrl : res.data.pictureUrl
+			});
 		})
 		.catch(err => {
 			console.log(err);

@@ -16,6 +16,7 @@ import com.sanbhat.aptmgr.exceptions.UserException;
 import com.sanbhat.aptmgr.models.LoginRequest;
 import com.sanbhat.aptmgr.models.LoginResponse;
 import com.sanbhat.aptmgr.models.Response;
+import com.sanbhat.aptmgr.models.ValidateUserResponse;
 import com.sanbhat.aptmgr.services.UserService;
 import com.sanbhat.aptmgr.services.UserService.ReturnCode;
 
@@ -34,13 +35,14 @@ public class AuthenticationController {
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
     public LoginResponse login(@RequestBody LoginRequest loginRequest) throws UserException {
-        boolean valid = userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword());
+        ValidateUserResponse validateUserResponse = userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword());
         
-        if(valid) {
+        if(validateUserResponse.isValid()) {
         	LoginResponse response = new LoginResponse();
         	String token = Jwts.builder()
 	        	.setSubject(loginRequest.getEmail())
-	            .claim(Constants.HTTP_ATTRIBUTE_LOGIN_NAME, loginRequest.getEmail())
+	            .claim(Constants.CLAIM_LOGIN_NAME, validateUserResponse.getUserEntity().getEmail())
+	            .claim(Constants.CLAIM_USER_ROLE, validateUserResponse.getUserEntity().getRole())
 	            .setIssuedAt(new Date())
 	            .signWith(SignatureAlgorithm.HS256, Constants.JWT_KEY)
 	            .compact();
