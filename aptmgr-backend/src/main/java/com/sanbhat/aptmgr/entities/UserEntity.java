@@ -7,10 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="users")
+@NamedQuery(name = "UserEntity.searchByNameOrEmail",
+query="select u from UserEntity u where LOWER(u.name) like LOWER(?1) or LOWER(u.email) like LOWER(?1)")
 public class UserEntity implements Serializable {
 	
 	private static final long serialVersionUID = -2584522971197739983L;

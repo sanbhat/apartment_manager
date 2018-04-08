@@ -1,12 +1,15 @@
 package com.sanbhat.aptmgr.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Table(name="apartments")
@@ -37,6 +40,10 @@ public class ApartmentsEntity implements Serializable {
 	@Column(name="apt_pincode")
 	private String pinCode;
 
+	@OneToMany
+	@JoinColumn(name="id")
+	private Set<ApartmentUserDataEntity> apartmentUsers;
+	
 	public int getId() {
 		return id;
 	}
@@ -83,6 +90,14 @@ public class ApartmentsEntity implements Serializable {
 
 	public void setPinCode(String pinCode) {
 		this.pinCode = pinCode;
+	}
+	
+	public Set<ApartmentUserDataEntity> getApartmentUsers() {
+		return apartmentUsers;
+	}
+
+	public void setApartmentUsers(Set<ApartmentUserDataEntity> apartmentUsers) {
+		this.apartmentUsers = apartmentUsers;
 	}
 
 	@Override

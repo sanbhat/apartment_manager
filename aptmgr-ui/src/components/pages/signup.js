@@ -4,6 +4,7 @@ import { clone, isEmpty } from 'lodash';
 
 import axios from 'axios';
 import {APP_BASE_URL} from '../../config/config';
+import profilePicDefault from '../../images/profile_default.jpg';
 
 
 export const signUpStyle = {
@@ -23,11 +24,16 @@ class Signup extends Component {
             name : '',
             countryCode : 0,
             phone: 0,
+            pictureUrl : profilePicDefault,
             errorMessage : '',
             message : ''
         };
         this.signup = this.signup.bind(this);
         this.preview = this.preview.bind(this);
+    }
+
+    componentDidMount() {
+        this.preview();
     }
 
     render() {
@@ -136,6 +142,7 @@ class Signup extends Component {
 
     signup(event) {
         let data = clone(this.state);
+        let form = event.target;
         event.preventDefault();
         axios.post(APP_BASE_URL + 'auth/signup', data)
         .then(res => {
@@ -147,8 +154,11 @@ class Signup extends Component {
             } else {
                 this.setState( {
                     errorMessage : '',
+                    pictureUrl: '',
                     message : res.data.message
                 });
+                form.reset();
+                this.preview();
             }
         })
         .catch(err => {
@@ -159,8 +169,9 @@ class Signup extends Component {
         })
     }
 
-    preview(event) {
-        document.getElementById('profilePicPreview').src = this.state.pictureUrl;
+    preview() {
+        let pic = this.state.pictureUrl ? this.state.pictureUrl : profilePicDefault
+        document.getElementById('profilePicPreview').src = pic;
     }
 
 }

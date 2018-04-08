@@ -7,7 +7,15 @@ import Incidents from '../components/pages/incidents';
 import Residents from '../components/pages/residents';
 import Login from '../components/pages/login';
 import Signup from '../components/pages/signup';
+
+//Super Admin pages
+import ApartmentMgmt from '../components/pages/superAdmin/apartmentMgmt';
+import RegisterApartment from '../components/pages/superAdmin/registerApartment';
+import EditApartment from '../components/pages/superAdmin/editApartment';
+
 import {APP_TOKEN_KEY} from '../config/config';
+
+
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -43,6 +51,10 @@ class AptMgrRoutes extends Component {
                 <PrivateRoute path={"/home"} component={Home} />
                 <PrivateRoute path={"/incidents"} component={Incidents} />
                 <PrivateRoute path={"/residents"} component={Residents} />
+                <PrivateRoute path={"/register-apt"} component={RegisterApartment} />
+					      <PrivateRoute path={"/apt-management"} component={ApartmentMgmt} />
+                <PrivateRoute path={"/edit-apartment/:aptId"} component={EditApartment} />
+					      <PrivateRoute path={"/saas-admin"} component={Home} />
             </div>
         );
     }

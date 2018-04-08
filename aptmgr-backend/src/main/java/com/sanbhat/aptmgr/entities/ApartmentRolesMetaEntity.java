@@ -22,7 +22,7 @@ public class ApartmentRolesMetaEntity implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
-	@Column(name="meta_apartment_roles")
+	@Column(name="apt_role_name")
 	private String role;
 	
 	@Column

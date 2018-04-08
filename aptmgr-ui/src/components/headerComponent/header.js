@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import {Redirect} from 'react-router';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
 import { setCurrentUser } from '../../actions/authActions';
 import { APP_TOKEN_KEY, APP_BASE_URL } from '../../config/config';
+import defaultProfilePic from '../../images/profile_default.jpg';
 
 class Header extends Component {
 
@@ -15,7 +15,7 @@ class Header extends Component {
 			email : '',
 			name : '',
 			pictureUrl : '',
-			defaultPictureUrl : 'http://placehold.it/30x30'
+			defaultPictureUrl : defaultProfilePic
 		};
 	}
 
@@ -41,11 +41,11 @@ class Header extends Component {
 
 			const userNavBarLinks = (
 				<ul className="nav navbar-nav navbar-right">
-					<li><img src={this.state.pictureUrl ? this.state.pictureUrl : this.state.defaultPictureUrl} height="45" width="45" className="profile-image img-circle" /> </li>
+					<li><img src={this.state.pictureUrl ? this.state.pictureUrl : this.state.defaultPictureUrl} height="45" width="45" className="profile-image img-circle" /></li>
 					<li className="dropdown">
 						<a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{this.state.name ? this.state.name : user.login_name}<span className="caret"></span></a>
 						<ul className="dropdown-menu">
-							<li><a href="#">Notifications</a></li>
+							<li><a href="#">Notifications <span class="badge">3</span></a></li>
 							<li><Link to={"/profile/"+ user.login_name}>Edit Profile</Link></li>
 							<li role="separator" className="divider"></li>
 							<li><a onClick={ (event) =>  this.logout(event)}>Logout</a></li>
@@ -62,18 +62,17 @@ class Header extends Component {
 
 			const userLeftMenu = (
 				<React.Fragment>
-					<li><Link to="/home" activeclassname={"active"}>Home<span className="sr-only">(current)</span></Link></li>
-					<li><Link to="/residents" activeclassname={"active"}>Residents Management</Link></li>
-					<li><Link to="/incidents" activeclassname={"active"}>Incident Management</Link></li>
+					<li><Link to="/home" activeclassname={"active"}><span className="glyphicon glyphicon-home"></span> Home<span className="sr-only">(current)</span></Link></li>
+					<li><Link to="/residents" activeclassname={"active"}><span className="glyphicon glyphicon-check"></span> Residents Management</Link></li>
+					<li><Link to="/incidents" activeclassname={"active"}><span className="glyphicon glyphicon-info-sign"></span> Incident Management</Link></li>
 				</React.Fragment>
 			)
 
 			const superAdminLeftMenu = (
 				<React.Fragment>
 					{userLeftMenu}
-					<li><Link to="/register-apt" activeclassname={"active"}>Register Apartments</Link></li>
-					<li><Link to="/apt-management" activeclassname={"active"}>Apartment Management</Link></li>
-					<li><Link to="/saas-admin" activeclassname={"active"}>Admin</Link></li>
+					<li><Link to="/apt-management" activeclassname={"active"}><span className="glyphicon glyphicon-tasks"></span> Apartment Management</Link></li>
+					<li><Link to="/saas-admin" activeclassname={"active"}><span className="glyphicon glyphicon-user"></span> Admin</Link></li>
 				</React.Fragment>
 			)
 
@@ -89,7 +88,7 @@ class Header extends Component {
 										<span className="icon-bar"></span>
 										<span className="icon-bar"></span>
 									</button>
-									<a className="navbar-brand" href="#">Apartment Manager</a>
+									<a className="navbar-brand" href="#">Apartment Manager <span className="glyphicon glyphicon-home"></span></a>
 								</div>
 								<div id="navbar" className="navbar-collapse collapse">
 									{isAuthenticated ? userNavBarLinks : guestNavBarLinks}
