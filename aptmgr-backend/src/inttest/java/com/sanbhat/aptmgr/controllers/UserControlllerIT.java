@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.sanbhat.aptmgr.entities.UserEntity;
 import com.sanbhat.aptmgr.models.Response;
-import com.sanbhat.aptmgr.models.UserSearchResponse;
+import com.sanbhat.aptmgr.models.User;
 
 public class UserControlllerIT extends BaseControllerIT {
 
@@ -34,11 +34,11 @@ public class UserControlllerIT extends BaseControllerIT {
     @Test
     public void testSearchQuery() throws Exception {
     	HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-    	ParameterizedTypeReference<Response<List<UserSearchResponse>>> p = new ParameterizedTypeReference<Response<List<UserSearchResponse>>>() {
+    	ParameterizedTypeReference<Response<List<User>>> p = new ParameterizedTypeReference<Response<List<User>>>() {
 		};
-    	ResponseEntity<Response<List<UserSearchResponse>>> response = template.exchange(base.toString() + "users/search?query=test", 
+    	ResponseEntity<Response<List<User>>> response = template.exchange(base.toString() + "users/search?query=test", 
     			HttpMethod.GET, httpEntity, p);
-    	Response<List<UserSearchResponse>> searchResult = response.getBody();
+    	Response<List<User>> searchResult = response.getBody();
     	assertNotNull(searchResult.getPayload());
     	assertEquals(1, searchResult.getPayload().size());
     	assertEquals("test@gmail.com", searchResult.getPayload().get(0).getEmail());

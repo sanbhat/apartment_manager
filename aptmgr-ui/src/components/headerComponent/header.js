@@ -45,7 +45,7 @@ class Header extends Component {
 					<li className="dropdown">
 						<a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{this.state.name ? this.state.name : user.login_name}<span className="caret"></span></a>
 						<ul className="dropdown-menu">
-							<li><a href="#">Notifications <span class="badge">3</span></a></li>
+							<li><a href="#">Notifications <span className="badge">3</span></a></li>
 							<li><Link to={"/profile/"+ user.login_name}>Edit Profile</Link></li>
 							<li role="separator" className="divider"></li>
 							<li><a onClick={ (event) =>  this.logout(event)}>Logout</a></li>
@@ -116,6 +116,7 @@ class Header extends Component {
 	logout(event) {
 		localStorage.removeItem(APP_TOKEN_KEY);
 		this.props.setCurrentUser({});
+		window.location.reload();
 	}
 
 	fetchUserData(userEmailId) {

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sanbhat.aptmgr.Constants;
 import com.sanbhat.aptmgr.entities.UserEntity;
 import com.sanbhat.aptmgr.models.Response;
-import com.sanbhat.aptmgr.models.UserSearchResponse;
+import com.sanbhat.aptmgr.models.User;
 import com.sanbhat.aptmgr.services.UserService;
 import com.sanbhat.aptmgr.services.UserService.ReturnCode;
 
@@ -53,11 +53,11 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET)
-	public Response<List<UserSearchResponse>> searchUser(@RequestParam(name="query") String query) {
+	public Response<List<User>> searchUser(@RequestParam(name="query") String query) {
 		//TODO: Use Apache Solr?
-		Response<List<UserSearchResponse>> result = new Response<>();
+		Response<List<User>> result = new Response<>();
 		try {
-			List<UserSearchResponse> users = userService.searchByQuery(query);
+			List<User> users = userService.searchByQuery(query);
 			result.setPayload(users);
 		} catch(Exception e) {
 			logger.error("Exception performing search query on users", e);

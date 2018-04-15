@@ -18,9 +18,9 @@ class ApartmentTableRow extends Component {
                 <td>{this.props.apartment.city}</td>
                 <td> 
                     <div className="btn-group" aria-label="...">
-                        <Link to={"/edit-apartment/" + this.props.apartment.id} className="btn btn-primary"><span className="glyphicon glyphicon-cog"></span></Link>
-                        <Link to="/delete-aprtment" className="btn btn-danger"><span className="glyphicon glyphicon-trash"></span></Link>
-                        <Link to="/contact-aprtment" className="btn btn-warning"><span className="glyphicon glyphicon-envelope"></span></Link>
+                        <Link title="Configure Apartment" to={"/edit-apartment/" + this.props.apartment.id} className="btn btn-primary"><span className="glyphicon glyphicon-cog"></span></Link>
+                        <Link title="Delete Apartment" to="/delete-aprtment" className="btn btn-danger"><span className="glyphicon glyphicon-trash"></span></Link>
+                        <Link title="Contact Apartment Admins" to="/contact-aprtment" className="btn btn-warning"><span className="glyphicon glyphicon-envelope"></span></Link>
                     </div>
                 </td>
             </tr>

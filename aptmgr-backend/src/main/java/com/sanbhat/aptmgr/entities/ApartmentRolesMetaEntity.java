@@ -27,6 +27,9 @@ public class ApartmentRolesMetaEntity implements Serializable {
 	
 	@Column
 	private String description;
+	
+	@Column
+	private boolean core;
 
 	public int getId() {
 		return id;
@@ -50,6 +53,14 @@ public class ApartmentRolesMetaEntity implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public boolean isCore() {
+		return core;
+	}
+
+	public void setCore(boolean core) {
+		this.core = core;
 	}
 
 	@Override

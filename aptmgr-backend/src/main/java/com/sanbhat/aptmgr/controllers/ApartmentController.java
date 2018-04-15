@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sanbhat.aptmgr.Constants;
-import com.sanbhat.aptmgr.entities.ApartmentsEntity;
 import com.sanbhat.aptmgr.models.Apartment;
 import com.sanbhat.aptmgr.models.Response;
 import com.sanbhat.aptmgr.services.ApartmentsService;
@@ -32,12 +31,32 @@ public class ApartmentController {
 	private ApartmentsService apartmentsService;
 
 	@RequestMapping(value="/save", method=RequestMethod.POST)
-	public Response<String> saveApartment(@RequestBody ApartmentsEntity apt) {
+	public Response<String> saveApartment(@RequestBody Apartment apt) {
 		Response<String> response = new Response<>();
-		if(apartmentsService.createApartment(apt)) {
-			response.setMessage(messageSource.getMessage("APARTMENT_CREATED", null, Locale.getDefault())); 
-		} else {
-			logger.error("Error creating apartment data");
+		try {
+			if(apartmentsService.createApartment(apt)) {
+				response.setMessage(messageSource.getMessage("APARTMENT_CREATED", null, Locale.getDefault())); 
+			} else {
+				logger.error("Error creating apartment data");
+				response.setErrorCode(Constants.FAILED);
+				response.setErrorMessage(messageSource.getMessage("GENERIC_FAILURE", null, Locale.getDefault()));
+			}
+		} catch(Exception e) {
+			logger.error("Error creating apartment data", e);
+			response.setErrorCode(Constants.FAILED);
+			response.setErrorMessage(messageSource.getMessage("GENERIC_FAILURE", null, Locale.getDefault()));
+		}
+		return response;
+	}
+	
+	@RequestMapping(value="/update", method=RequestMethod.PUT)
+	public Response<String> updateApartment(@RequestBody Apartment apt) {
+		Response<String> response = new Response<>();
+		try {
+			apartmentsService.updateApartment(apt);
+			response.setMessage(messageSource.getMessage("APARTMENT_UPDATED", null, Locale.getDefault()));
+		} catch(Exception e) {
+			logger.error("Error updating apartment data", e);
 			response.setErrorCode(Constants.FAILED);
 			response.setErrorMessage(messageSource.getMessage("GENERIC_FAILURE", null, Locale.getDefault()));
 		}
@@ -50,7 +69,7 @@ public class ApartmentController {
 	}
 	
 	@RequestMapping(value="/all", method=RequestMethod.GET)
-	public List<ApartmentsEntity> getAllApartments() {
+	public List<Apartment> getAllApartments() {
 		return apartmentsService.getAllApartments();
 	}
 }

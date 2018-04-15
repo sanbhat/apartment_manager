@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import com.sanbhat.aptmgr.entities.UserEntity;
 import com.sanbhat.aptmgr.exceptions.UserException;
 import com.sanbhat.aptmgr.jpa.repositories.UserRepository;
-import com.sanbhat.aptmgr.models.UserSearchResponse;
+import com.sanbhat.aptmgr.models.User;
 import com.sanbhat.aptmgr.models.ValidateUserResponse;
 
 @Service
@@ -76,16 +76,13 @@ public class UserService {
 		userRepository.save(existing);
 	}
 	
-	public List<UserSearchResponse> searchByQuery(String query) {
+	public List<User> searchByQuery(String query) {
 		String modifiedQuery = "%" + query.toLowerCase() +"%";
-		List<UserSearchResponse> result = new ArrayList<>();
+		List<User> result = new ArrayList<>();
 		List<UserEntity> users =  userRepository.searchByNameOrEmail(modifiedQuery);
 		if(CollectionUtils.isNotEmpty(users)) {
 			for(UserEntity u : users) {
-				UserSearchResponse r = new UserSearchResponse();
-				r.setEmail(u.getEmail());
-				r.setDisplayValue(u.getName() + " ("+u.getEmail()+")");
-				result.add(r);
+				result.add(u.toModel());
 			}
 		}
 		return result;

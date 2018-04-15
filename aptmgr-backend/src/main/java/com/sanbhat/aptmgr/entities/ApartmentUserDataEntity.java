@@ -8,11 +8,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 @Entity
 @Table(name="apartment_user_data")
+@ToString
+@EqualsAndHashCode(of={"user", "role"} )
 public class ApartmentUserDataEntity implements Serializable {
 
 	private static final long serialVersionUID = 9100384934229202057L;
@@ -21,15 +27,17 @@ public class ApartmentUserDataEntity implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
-	@Column(name="apt_id")
-	private int aptId;
-	
-	@Column(name="apt_role_id")
-	private int aptRoleId;
+	@OneToOne
+	@JoinColumn(name="apt_role_id")
+	private ApartmentRolesMetaEntity role;
 	
 	@OneToOne
 	@JoinColumn(name="user_id")
 	private UserEntity user;
+	
+	@ManyToOne
+	@JoinColumn(name="apt_id")
+	private ApartmentsEntity apartment;
 	
 	@Column
 	private String status;
@@ -42,20 +50,12 @@ public class ApartmentUserDataEntity implements Serializable {
 		this.id = id;
 	}
 
-	public int getAptId() {
-		return aptId;
+	public ApartmentRolesMetaEntity getRole() {
+		return role;
 	}
 
-	public void setAptId(int aptId) {
-		this.aptId = aptId;
-	}
-
-	public int getAptRoleId() {
-		return aptRoleId;
-	}
-
-	public void setAptRoleId(int aptRoleId) {
-		this.aptRoleId = aptRoleId;
+	public void setRole(ApartmentRolesMetaEntity role) {
+		this.role = role;
 	}
 
 	public UserEntity getUser() {
@@ -65,7 +65,7 @@ public class ApartmentUserDataEntity implements Serializable {
 	public void setUser(UserEntity user) {
 		this.user = user;
 	}
-
+	
 	public String getStatus() {
 		return status;
 	}
@@ -73,5 +73,13 @@ public class ApartmentUserDataEntity implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+	public ApartmentsEntity getApartment() {
+		return apartment;
+	}
+
+	public void setApartment(ApartmentsEntity apartment) {
+		this.apartment = apartment;
+	}
+
 }

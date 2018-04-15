@@ -28,19 +28,20 @@ create table users (
 create table meta_apartment_roles (
 	id serial primary key,
 	apt_role_name varchar(100) unique,
-	description varchar(300)
+	description varchar(300),
+	core boolean
 );
 
-insert into meta_apartment_roles (apt_role_name, description) values
-('President',  'Takes care of overall functioning of the apartment'),
-('Vice President',  'Takes care of overall functioning of the apartment, in the absence of president. Will also help the president'),
-('Secretary',  'Responsible for day to day activities, functioning and communications'),
-('Joint Secretary',  'Responsible for day to day activities, functioning and communications, in the absence of Secretary. Will also help the Secretary'),
-('Treasurer',  'Manages finance of the apartment society'),
-('Joint Treasurer',  'Manages finance of the apartment society, in the absence of Treasurer. Will also help the Treasurer'),
-('Committee member',  'Member of one of or more committees '),
-('Owner',  'Member of apartment association, who owns one or more units in the society.'),
-('Tenant',  'A temporary resident of the apartment society.'); 
+insert into meta_apartment_roles (apt_role_name, description, core) values
+('President',  'Takes care of overall functioning of the apartment', true),
+('Vice President',  'Takes care of overall functioning of the apartment, in the absence of president. Will also help the president', true),
+('Secretary',  'Responsible for day to day activities, functioning and communications', true),
+('Joint Secretary',  'Responsible for day to day activities, functioning and communications, in the absence of Secretary. Will also help the Secretary', true),
+('Treasurer',  'Manages finance of the apartment society', true),
+('Joint Treasurer',  'Manages finance of the apartment society, in the absence of Treasurer. Will also help the Treasurer', true),
+('Committee member',  'Member of one of or more committees ', false),
+('Owner',  'Member of apartment association, who owns one or more units in the society.', false),
+('Tenant',  'A temporary resident of the apartment society.', false); 
 
 create table meta_apartment_functions (
 	id serial primary key,

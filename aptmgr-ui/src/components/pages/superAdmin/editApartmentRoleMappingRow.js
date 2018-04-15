@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Select from 'react-select';
 import axios from 'axios';
-import { isEmpty } from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 import { APP_BASE_URL } from '../../../config/config';
 
 import 'react-select/dist/react-select.css';
@@ -25,15 +25,39 @@ class EditApartmentRoleMappingRow extends Component {
             multi : false,
             backspaceRemoves : true,
             required : false,
-            roleUser : ''
+            apartmentRoleMapping : {
+                role : {},
+                user : {
+                    displayName : ''
+                }
+            }
+        }
+        this.setNewUser = this.setNewUser.bind(this);
+    }
+
+    //to load the page for the first time
+    componentDidMount() {
+        if(this.props.roleMappingModel) {
+            this.setState({
+                apartmentRoleMapping : this.props.roleMappingModel
+            })
+        }
+    }
+
+    //To handle the props state change
+    componentWillReceiveProps(nextProps) {
+        if(nextProps !== this.props) {
+            this.setState({
+                apartmentRoleMapping : nextProps.roleMappingModel
+            })
         }
     }
 
     render() {
         return (
             <tr>
-                <td style={colStyle}><strong>{this.props.data.role.roleName}</strong></td>
-                <td style={colStyle}>{this.props.data.role.description}</td>
+                <td style={colStyle}><strong>{this.state.apartmentRoleMapping.role.roleName}</strong></td>
+                <td style={colStyle}>{this.state.apartmentRoleMapping.role.description}</td>
                 <td style={colStyle}>
                     <Select.Async 
                         type="email"
@@ -44,14 +68,21 @@ class EditApartmentRoleMappingRow extends Component {
                         searchPromptText="Type at least 3 characters to start searching"
                         menuContainerStyle={suggestBoxStyle}
                         valueKey="email"
-                        labelKey="displayValue"
+                        labelKey="displayName"
                         matchPos="any" matchProp="any"
-                        value={this.state.roleUser} onChange={(value) => this.setState({ roleUser: value })}
+                        value={this.state.apartmentRoleMapping.user ? this.state.apartmentRoleMapping.user : {}} 
+                        onChange={(value) => this.setNewUser(value)}
                         loadOptions={this.fetchUserAsync.bind(this)}
                         backspaceRemoves={this.state.backspaceRemoves} /> 
                 </td>
             </tr>
         )
+    }
+
+    setNewUser(value) {
+        let newValue = cloneDeep(this.state.apartmentRoleMapping);
+        newValue.user = value
+        this.props.handleChangeMethod("APT_ROLE_MAPPING", newValue);
     }
 
     fetchUserAsync(input) {

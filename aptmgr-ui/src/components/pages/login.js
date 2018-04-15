@@ -70,11 +70,15 @@ class Login extends Component {
                                         </div>
                                     </div>
                                     <div className="form-group last">
-                                        <div className="col-sm-offset-3 col-sm-9">
-                                            <button type="submit" className="btn btn-success btn-sm">
-                                                Sign in</button>
-                                                <button type="reset" className="btn btn-default btn-sm">
-                                                Reset</button>
+                                        <div className="col-sm-offset-3">
+                                            <div className="col-sm-4">
+                                                <button type="submit" className="btn btn-success btn-md">
+                                                    Sign in</button>
+                                            </div>
+                                            <div className="col-sm-4">
+                                                <button type="reset" className="btn btn-default btn-md">
+                                                    Reset</button>
+                                            </div>
                                         </div>
                                     </div>
                                     { this.state.errorMessage !== '' && 

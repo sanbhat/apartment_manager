@@ -93,20 +93,23 @@ class Signup extends Component {
                                             <input type="text" className="form-control" placeholder="Picture URL" id="profilePicLabel" onChange= { (event) => this.setState({ pictureUrl : event.target.value})}/>
                                         </div>
                                         <div className="col-sm-2">
-                                        <button type="button" className="btn btn-success btn-sm" onClick={this.preview}>
+                                        <button type="button" className="btn btn-primary btn-sm" onClick={this.preview}>
                                                 Preview</button>
                                         </div>
                                     </div>
 
                                     <div className="form-group last">
-                                        <div className="col-sm-offset-3 col-sm-9">
-                                            <button type="submit" className="btn btn-success btn-sm">
+                                        <div className="col-sm-offset-3">
+                                            <div className="col-sm-3">
+                                                <button type="submit" id="signUpButton" className="btn btn-success btn-md">
                                                 Sign Up</button>
-                                                <button type="reset" className="btn btn-default btn-sm">
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <button type="reset" id="resetButton" className="btn btn-default btn-md">
                                                 Reset</button>
+                                            </div>
                                         </div>
                                     </div>
-                                   
                                 </form>
 
                                 {this.state.errorMessage !== '' &&
@@ -144,6 +147,12 @@ class Signup extends Component {
         let data = clone(this.state);
         let form = event.target;
         event.preventDefault();
+        this.toggleButtons(false);
+
+        if(data.pictureUrl === profilePicDefault) {
+            data.pictureUrl = '';
+        }
+
         axios.post(APP_BASE_URL + 'auth/signup', data)
         .then(res => {
             if(!isEmpty(res.data.errorMessage)) {
@@ -160,13 +169,20 @@ class Signup extends Component {
                 form.reset();
                 this.preview();
             }
+            this.toggleButtons(true);
         })
         .catch(err => {
             this.setState({ 
                 errorMessage : err.message,
                 message : ''
             });
+            this.toggleButtons(true);
         })
+    }
+
+    toggleButtons(enable) {
+        document.getElementById("signUpButton").enable = enable;
+        document.getElementById("resetButton").enable = enable;
     }
 
     preview() {

@@ -53,7 +53,7 @@ class RegisterApartment extends Component {
                                     <div className="form-group">
                                         <label htmlFor="primaryEmailLabel" className="col-sm-3 control-label">
                                             Primary Email</label>
-                                            <Select.Async id="primaryEmailLabel" 
+                                            <Select.Async 
                                                           type="email"
                                                           required={this.state.required}
                                                           autoComplete="off"
@@ -62,7 +62,7 @@ class RegisterApartment extends Component {
                                                           searchPromptText="Type at least 3 characters to start searching"
                                                           menuContainerStyle = {suggestBoxStyle}
                                                           valueKey="email"
-                                                          labelKey="displayValue"
+                                                          labelKey="displayName"
                                                           className="col-sm-9" 
                                                           matchPos="any" matchProp="any"
                                                           value={this.state.primaryEmail} onChange={ (value) => this.setState( { primaryEmail : value })}
@@ -93,11 +93,15 @@ class RegisterApartment extends Component {
                                     </div>
 
                                     <div className="form-group last">
-                                        <div className="col-sm-offset-3 col-sm-9">
-                                            <button type="submit" className="btn btn-success btn-sm col-sm-3">
-                                                Register</button>
-                                                <button type="reset" className="btn btn-default btn-sm">
-                                                Reset</button>
+                                        <div className="col-sm-offset-3">
+                                            <div className="col-sm-3">
+                                                <button type="submit" className="btn btn-success btn-md">
+                                                    Register</button>
+                                            </div>
+                                            <div className="col-sm-3">
+                                                <button type="reset" className="btn btn-default btn-md">
+                                                    Reset</button>
+                                            </div>
                                         </div>
                                     </div>
                                    

@@ -1,5 +1,6 @@
 package com.sanbhat.aptmgr.entities;
 
+import java.beans.Transient;
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
+import com.sanbhat.aptmgr.models.User;
 
 @Entity
 @Table(name="users")
@@ -105,6 +108,16 @@ public class UserEntity implements Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+	@Transient
+	public User toModel() {
+		User user = new User();
+		user.setId(this.id);
+		user.setEmail(this.email);
+		user.setName(this.name);
+		user.setDisplayName(this.name + " ("+this.email+")");
+		return user;
 	}
 
 	@Override

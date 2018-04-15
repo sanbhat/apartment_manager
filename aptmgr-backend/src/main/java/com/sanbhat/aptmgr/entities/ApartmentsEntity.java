@@ -3,14 +3,17 @@ package com.sanbhat.aptmgr.entities;
 import java.io.Serializable;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.sanbhat.aptmgr.models.Apartment;
 
 @Table(name="apartments")
 @Entity
@@ -40,8 +43,8 @@ public class ApartmentsEntity implements Serializable {
 	@Column(name="apt_pincode")
 	private String pinCode;
 
-	@OneToMany
-	@JoinColumn(name="id")
+	@OneToMany(cascade = {CascadeType.ALL}, 
+			mappedBy="apartment", fetch = FetchType.EAGER)
 	private Set<ApartmentUserDataEntity> apartmentUsers;
 	
 	public int getId() {
@@ -98,6 +101,17 @@ public class ApartmentsEntity implements Serializable {
 
 	public void setApartmentUsers(Set<ApartmentUserDataEntity> apartmentUsers) {
 		this.apartmentUsers = apartmentUsers;
+	}
+	
+	public Apartment toModel() {
+		Apartment model = new Apartment();
+		model.setId(this.id);
+		model.setAptName(this.aptName);
+		model.setPrimaryEmail(this.primaryEmail);
+		model.setAddress(this.address);
+		model.setCity(this.city);
+		model.setPinCode(this.pinCode);
+		return model;
 	}
 
 	@Override
